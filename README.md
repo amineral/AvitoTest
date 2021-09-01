@@ -6,7 +6,7 @@
 - Create virtual enviroment: virtualenv venv
 - Activate it: source venv/bin/activate
 - Install dependencies: pip install -r requirements.txt
-- Start server: python3 manage.py runserver 
+- Start server: python3 manage.py runserver
 
 ### Endpoints
 - root: https://127.0.0.1/api/
