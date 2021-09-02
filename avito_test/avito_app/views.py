@@ -8,6 +8,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 
 # app imports
 from .models import Client, Operation
@@ -23,13 +24,23 @@ from .exchange import exchange
 def api_help(request):
     return render(request, "avito_app/help.html")
 
+@api_view(['POST'])
+def add_client(request):  
+    if request.method == "POST":
+        serializer = ClientSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+
+
 def transaction(request):
     """
         request params required:
-            from_id : client.id
-            to_id : client.id
-            currency : "RUB" default
+            from : client.id
+            to : client.id
             value : integer value
+            currency : "RUB" default (OPTIONAL PARAM)
         
         return:
             ERROR: error details
@@ -47,7 +58,8 @@ def transaction(request):
 
         if "currency" not in params:
             currency = "RUB"
-        currency = params["currency"]
+        else:
+            currency = params["currency"]
         if "value" not in params:
              return render(request, "avito_app/error.html", {"error_code" : 3})
         elif int(params["value"]) <= 0:
@@ -60,6 +72,8 @@ def transaction(request):
             if not value:
                 return render(request, "avito_app/error.html", {"error_code" : 4})
         description = f'From {client_from} {value} {currency} to {client_to}'
+        if client_from.balance < value:
+            return HttpResponse("There is not enough on balance")
         new_operation = Operation(
             client_from=client_from,
             client_to=client_to,
