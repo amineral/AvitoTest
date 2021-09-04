@@ -11,14 +11,16 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 
 # app imports
-from .models import Client, Operation
+from .models import Client, Operation, BankOperation
 from .serializers import (
     ClientSerializer, 
     ClientDetailSerializer, 
     OperationSerializer, 
     OperationDetailSerializer,
+    BankOperationDetailSerializer,
 )
 from .exchange import exchange
+from .errors import errors
 
 # function as view
 def api_help(request):
@@ -32,6 +34,55 @@ def add_client(request):
             serializer.save()
             return Response(serializer.data)
 
+def depo_op(request):
+    params = request.GET
+    try: 
+        if int(params["value"]) <= 0:
+            return JsonResponse(errors["code_3"])
+        value = int(params["value"])
+
+        try:
+            client = Client.objects.get(pk=int(params["id"]))
+        except Client.DoesNotExist:
+            return JsonResponse(errors["code_2"])
+        
+        client.balance += value
+        client.save()
+
+        bank_operation = BankOperation(client_to=client, operation_type="depo", value=value)
+        bank_operation.save()
+        serializer = BankOperationDetailSerializer(bank_operation)
+        return JsonResponse(serializer.data)
+
+    except MultiValueDictKeyError:
+        return JsonResponse(errors["code_2"])
+
+
+def draw_op(request):
+    params = request.GET
+    try:
+        if int(params["value"]) <= 0:
+            return JsonResponse(errors["code_3"])
+        value = int(params["value"])
+
+        try:
+            client = Client.objects.get(pk=int(params["id"]))
+        except Client.DoesNotExist:
+            return JsonResponse(errors["code_2"])
+        
+        if client.balance < value:
+            return JsonResponse(errors["code_5"])
+
+        client.balance -= value
+        client.save()
+
+        bank_operation = BankOperation(client_to=client, operation_type="draw", value=value)
+        bank_operation.save()
+        serializer = BankOperationDetailSerializer(bank_operation)
+        return JsonResponse(serializer.data)
+
+    except MultiValueDictKeyError:
+        return JsonResponse(errors["code_2"])
 
 
 def transaction(request):
@@ -54,26 +105,29 @@ def transaction(request):
             client_from = Client.objects.get(id=from_id)
             client_to = Client.objects.get(id=to_id)
         except Client.DoesNotExist:
-            return render(request, "avito_app/error.html", {"error_code" : 2})
+            return JsonResponse(errors["code_2"])
 
         if "currency" not in params:
             currency = "RUB"
         else:
             currency = params["currency"]
+
         if "value" not in params:
-             return render(request, "avito_app/error.html", {"error_code" : 3})
+            return JsonResponse(errors["code_3"])
         elif int(params["value"]) <= 0:
-             return render(request, "avito_app/error.html", {"error_code" : 3})
+            return JsonResponse(errors["code_3"])
 
         value = int(params["value"])
-        if "currency" != "RUB":
+
+        if currency != "RUB":
             to_rub = exchange(currency, value)
             value = to_rub
             if not value:
-                return render(request, "avito_app/error.html", {"error_code" : 4})
+                return JsonResponse(errors["code_4"])
+        
         description = f'From {client_from} {value} {currency} to {client_to}'
         if client_from.balance < value:
-            return HttpResponse("There is not enough on balance")
+            return JsonResponse(errors["code_5"])
         new_operation = Operation(
             client_from=client_from,
             client_to=client_to,
@@ -87,11 +141,10 @@ def transaction(request):
         client_to.save()
         client_from.save()
         serializer = OperationDetailSerializer(new_operation)
-
         return JsonResponse(serializer.data)
 
     except MultiValueDictKeyError:
-        return render(request, "avito_app/error.html", {"error_code" : 1})
+        return JsonResponse(errors["code_2"])
  
 # class as view
 class OperationListView(generics.ListAPIView):

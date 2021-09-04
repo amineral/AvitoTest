@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Client, Operation
+from .models import Client, Operation, BankOperation
 
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,4 +19,9 @@ class OperationSerializer(serializers.ModelSerializer):
 class OperationDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Operation
+        fields = "__all__"
+
+class BankOperationDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BankOperation
         fields = "__all__"

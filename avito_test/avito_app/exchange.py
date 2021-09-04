@@ -1,6 +1,8 @@
 import requests
 from .config import EXCHANGE_API_KEY, API_HTTP
 
+# TODO: add TTL Cache to values to minimize exchange API requests
+
 def get_exchange():
     params = {
         "app_id" : EXCHANGE_API_KEY,
@@ -19,4 +21,3 @@ def exchange(currency, amount):
         to_rub = usd * values["RUB"]
         return to_rub
     return False
-

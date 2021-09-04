@@ -7,7 +7,9 @@ from .views import (
     OperationListView, transaction, 
     OperationDetailView,
     api_help,
-    add_client
+    add_client,
+    depo_op,
+    draw_op,
 )
 
 urlpatterns = [
@@ -18,4 +20,6 @@ urlpatterns = [
     path('operation/<int:pk>', OperationDetailView.as_view(), name='operation_details'),
     path('transaq/', transaction),
     path('client/new/', add_client),
+    path('depo/', depo_op),
+    path('draw/', draw_op),
 ]
