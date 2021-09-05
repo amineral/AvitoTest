@@ -23,7 +23,7 @@
         - currency=RUB(default)
 
 ### Added TTLCache
-- to minimize requests to exchange API programm caching exchange values for 3600 sec after last request to API
+- to minimize requests to exchange API(50 per day) programm caching exchange values for 3600 sec after last request to API
 - exchange API: https://openexchangerates.org/api
 
 #### Visit /api/help for details
