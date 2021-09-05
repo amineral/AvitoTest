@@ -37,5 +37,9 @@ errors = {
     "code_7":
     {
         "error_text": "SERIALIZER IS NOT VALID: check input data"
+    },
+    "code_8":
+    {
+        "error_text": "CONNECTION ERROR: Check your internet connection"
     }
 }

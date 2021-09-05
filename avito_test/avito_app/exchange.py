@@ -1,8 +1,6 @@
 import requests
 from cachetools import TTLCache
-from .config import EXCHANGE_API_KEY, API_HTTP
-
-# TODO: add TTL Cache to values to minimize exchange API requests
+from .config import EXCHANGE_API_KEY, API_HTTP, EXCHANGE_IS_ACTIVE
 
 
 def get_exchange():
@@ -26,8 +24,9 @@ def exchange(currency, amount):
 # with caching currency values for 3600 sec
 # if KeyError exception then updating our cache
 
-cache = TTLCache(maxsize=2, ttl=3600)
-try: 
-    cache["values"]
-except KeyError:
-    cache["values"] = get_exchange()
+if EXCHANGE_IS_ACTIVE:
+    cache = TTLCache(maxsize=2, ttl=3600)
+    try: 
+        cache["values"]
+    except KeyError:
+        cache["values"] = get_exchange()

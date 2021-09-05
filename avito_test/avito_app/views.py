@@ -21,6 +21,7 @@ from .serializers import (
 )
 from .exchange import exchange
 from .errors import errors
+from .config import EXCHANGE_IS_ACTIVE
 
 # function as view
 def api_help(request):
@@ -111,7 +112,7 @@ def transaction(request):
         except Client.DoesNotExist:
             return JsonResponse(errors["code_2"])
 
-        if "currency" not in params:
+        if "currency" not in params or not EXCHANGE_IS_ACTIVE:
             currency = "RUB"
         else:
             currency = params["currency"]
