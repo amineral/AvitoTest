@@ -33,6 +33,10 @@ def add_client(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        else:
+            return JsonResponse(errors["code_7"])
+    else:
+        return JsonResponse(errors["code_6"])
 
 def depo_op(request):
     params = request.GET

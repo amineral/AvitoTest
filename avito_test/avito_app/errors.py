@@ -29,5 +29,13 @@ errors = {
     "code_5":
     {
         "error_text": "BALANCE ERROR: Not enough balance"
+    },
+    "code_6":
+    {
+        "error_text": "WRONG METHOD: Only POST allowed"
+    },
+    "code_7":
+    {
+        "error_text": "SERIALIZER IS NOT VALID: check input data"
     }
 }
