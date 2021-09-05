@@ -25,5 +25,6 @@
 ### Added TTLCache
 - to minimize requests to exchange API(50 per day) programm caching exchange values for 3600 sec after last request to API
 - exchange API: https://openexchangerates.org/api
+- if you haven't internet connection set .avito_app/config.py -> EXCHANGE_IS_ACTIVE = False
 
 #### Visit /api/help for details
