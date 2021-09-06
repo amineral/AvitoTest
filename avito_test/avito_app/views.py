@@ -130,7 +130,7 @@ def transaction(request):
             if not value:
                 return JsonResponse(errors["code_4"])
         
-        description = f'From {client_from} {value} {currency} to {client_to}'
+        description = f'From {client_from} {value} RUB to {client_to}'
         if client_from.balance < value:
             return JsonResponse(errors["code_5"])
         new_operation = Operation(
@@ -140,6 +140,7 @@ def transaction(request):
             value=value,
         )
         
+        new_operation.currency = currency
         new_operation.save()
         client_from.balance -= value
         client_to.balance += value
