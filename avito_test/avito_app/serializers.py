@@ -21,6 +21,11 @@ class OperationDetailSerializer(serializers.ModelSerializer):
         model = Operation
         fields = "__all__"
 
+class BankOperationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BankOperation
+        fields = "__all__"
+
 class BankOperationDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = BankOperation

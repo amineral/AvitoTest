@@ -15,9 +15,12 @@ class Operation(models.Model):
     description = models.CharField(max_length=200)
     value = models.IntegerField(default=0)
     currency = models.CharField(max_length=20, default="RUB")
+    RUB = models.IntegerField(default=0)
 
 class BankOperation(models.Model):
     client_to = models.ForeignKey(Client, null=False, default=None, on_delete=models.CASCADE)
     operation_type = models.CharField(max_length=4, null=False)
     value = models.IntegerField(default=0)
+    currency = models.CharField(max_length=4, default="RUB")
+    RUB = models.IntegerField(default=0)
 

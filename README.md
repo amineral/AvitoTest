@@ -13,19 +13,19 @@
 - Help page: /api/help
 - Client list: /api/client
 - Client details: /api/client/{id}
-- Transaction: /api/transaq?{query_params}
+- Transaction: /api/transaq/?{query_params}
     - query_params:
     - required:
         - from=id
         - to=id
-        - value=int/float
+        - value=int
     - optional:
         - currency=RUB(default)
 
 ### Added TTLCache
 - to minimize requests to exchange API(50 per day) programm caching exchange values for 3600 sec after last request to API
 - exchange API: https://openexchangerates.org/api
-- if you haven't internet connection set .avito_app/config.py -> EXCHANGE_IS_ACTIVE = False
+- if you haven't internet connection set ./avito_app/config.py -> EXCHANGE_IS_ACTIVE = False
 
 ### Examples
 - 127.0.0.1/api/transaq?from=1&to=2&value=100&currency=USD

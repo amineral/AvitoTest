@@ -18,6 +18,7 @@ from .serializers import (
     OperationSerializer, 
     OperationDetailSerializer,
     BankOperationDetailSerializer,
+    BankOperationSerializer,
 )
 from .exchange import exchange
 from .errors import errors
@@ -54,7 +55,7 @@ def depo_op(request):
         client.balance += value
         client.save()
 
-        bank_operation = BankOperation(client_to=client, operation_type="depo", value=value)
+        bank_operation = BankOperation(client_to=client, operation_type="depo", value=value, RUB=value)
         bank_operation.save()
         serializer = BankOperationDetailSerializer(bank_operation)
         return JsonResponse(serializer.data)
@@ -81,7 +82,7 @@ def draw_op(request):
         client.balance -= value
         client.save()
 
-        bank_operation = BankOperation(client_to=client, operation_type="draw", value=value)
+        bank_operation = BankOperation(client_to=client, operation_type="draw", value=value, RUB=value)
         bank_operation.save()
         serializer = BankOperationDetailSerializer(bank_operation)
         return JsonResponse(serializer.data)
@@ -125,19 +126,20 @@ def transaction(request):
         value = int(params["value"])
 
         if currency != "RUB":
-            to_rub = exchange(currency, value)
-            value = to_rub
+            value_rub = exchange(currency, value)
             if not value:
                 return JsonResponse(errors["code_4"])
         
-        description = f'From {client_from} {value} RUB to {client_to}'
-        if client_from.balance < value:
+        description = f'From {client_from} {value_rub} RUB to {client_to}'
+        if client_from.balance < value_rub:
             return JsonResponse(errors["code_5"])
         new_operation = Operation(
             client_from=client_from,
             client_to=client_to,
             description=description,
+            currency=currency,
             value=value,
+            RUB=value_rub,
         )
         
         new_operation.currency = currency
@@ -168,3 +170,11 @@ class ClientListView(generics.ListAPIView):
 class ClientDetailsView(generics.RetrieveAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientDetailSerializer
+
+class BankOperationListView(generics.ListAPIView):
+    queryset = BankOperation.objects.all()
+    serializer_class = BankOperationSerializer
+
+class BankOperationDetailView(generics.RetrieveAPIView):
+    queryset = BankOperation.objects.all()
+    serializer_class = BankOperationDetailSerializer
