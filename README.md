@@ -26,7 +26,8 @@
 - if you haven't internet connection set ./avito_app/config.py -> EXCHANGE_IS_ACTIVE = False
 
 ### Examples
-- 127.0.0.1/api/transaq?from=1&to=2&value=100&currency=USD
+- 127.0.0.1/api/transaq/?from=1&to=2&value=100&currency=USD
+- 127.0.0.1/api/depo/?id=1&value=100&currency=EUR
 - 127.0.0.1/api/client
 - 127.0.0.1/api/client/1
 - 127.0.0.1/api/operation
