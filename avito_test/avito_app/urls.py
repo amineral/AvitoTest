@@ -12,10 +12,12 @@ from .views import (
     add_client,
     depo_op,
     draw_op,
+    index_api,
 )
 
 
 urlpatterns = [
+    path('', index_api, name="index_api"),
     path('help/', api_help, name='help'),
     path('client/', ClientListView.as_view(), name='client_list'),
     path('client/<int:pk>/', ClientDetailsView.as_view(), name="client_details"),

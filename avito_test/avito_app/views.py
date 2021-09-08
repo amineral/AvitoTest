@@ -25,6 +25,23 @@ from .errors import errors
 from .config import EXCHANGE_IS_ACTIVE
 
 # function as view
+
+def index_api(request):
+    api_urls = {
+        '/api/help' : 'help_age',
+        '/api/new' : 'add_new_client',
+        '/api/client' : "client_list",
+        '/api/client/<id>' : "get_client_details",
+        '/api/transaq/' : 'transactions_from_to_client',
+        '/api/operations/' : 'operation_list',
+        '/api/operations/<id>' : 'operation_details',
+        '/api/depo' : 'bank_deposite_operation',
+        '/api/draw' : 'bank_draw_operation',
+        '/api/bankoper' : 'bank_operation_list',
+        '/api/bankoper/<id>' : 'bank_operation_details',
+
+    }
+    return JsonResponse(api_urls)
 def api_help(request):
     return render(request, "avito_app/help.html")
 
