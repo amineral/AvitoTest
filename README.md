@@ -1,5 +1,5 @@
 # AvitoTest
-#######################################
+
 - Сервис работает на SQLite, потому что мой мак выдает странные ошибки при попытке установить постгрес или мускл. Если разберусь, то уберу эту запись.
 - В проекте сразу залита база с двумя пользователями для тестов.
 - Так же пользователей можно добавить через админку (./admin/ login: admin, password: 123456)
@@ -14,17 +14,11 @@
 
 ### Endpoints
 - root: https://127.0.0.1/api/
-- Help page: /api/help
-- Client list: /api/client
-- Client details: /api/client/{id}
-- Transaction: /api/transaq/?{query_params}
-    - query_params:
-    - required:
-        - from=id
-        - to=id
-        - value=int
-    - optional:
-        - currency=RUB(default)
+- Help page: /api/help/
+- Client list: /api/client/
+- Operation list /api/operations/
+- Bank operation list /api/bankoper/
+- All endpoints you can find on help page or index page /api/
 
 ### Added TTLCache
 - to minimize requests to exchange API(50 per day) programm caching exchange values for 3600 sec after last request to API
