@@ -34,5 +34,3 @@
 - 127.0.0.1/api/operation/1
 
 #### Visit /api/help for details
-
-git stash test
